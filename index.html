@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuantumXP Payment System</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Font: Orbitron -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* กำหนดค่าสีหลักและฟอนต์ */
+        :root {
+            --color-gold: #FFD700;
+            --color-black: #000000;
+            --color-gray-dark: #1a1a1a;
+            --color-gray-light: #333333;
+        }
+
+        /* ใช้ฟอนต์ Orbitron สำหรับหัวเรื่อง และ Noto Sans Thai สำหรับเนื้อหา */
+        body {
+            font-family: 'Noto Sans Thai', sans-serif;
+            background-color: var(--color-black);
+            color: var(--color-gold);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6, .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* เอฟเฟกต์เรืองแสง (Glow Effect) */
+        .glow-gold {
+            text-shadow: 0 0 8px var(--color-gold), 0 0 12px var(--color-gold), 0 0 16px rgba(255, 215, 0, 0.7);
+        }
+        
+        .glow-gold-soft {
+            text-shadow: 0 0 6px rgba(255, 215, 0, 0.5);
+        }
+
+        .btn-primary {
+            background-color: var(--color-gold);
+            color: var(--color-black);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            border: 2px solid var(--color-gold);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3), 0 0 20px rgba(255, 215, 0, 0.2);
+            animation: pulse-sm 2.5s infinite;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--color-black);
+            color: var(--color-gold);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.7), 0 0 25px rgba(255, 215, 0, 0.5);
+            animation-play-state: paused;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--color-gold);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            padding: 0.6rem 1.25rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            border: 2px solid var(--color-gold);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--color-gold);
+            color: var(--color-black);
+        }
+        
+        .btn-approve {
+            background-color: #22c55e; /* green-500 */
+            color: white;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+        }
+        .btn-approve:hover {
+            background-color: #16a34a; /* green-600 */
+        }
+        
+        .btn-reject {
+            background-color: #ef4444; /* red-500 */
+            color: white;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+        }
+        .btn-reject:hover {
+            background-color: #dc2626; /* red-600 */
+        }
+
+        /* สไตล์ฟอร์ม */
+        .form-input {
+            background-color: var(--color-gray-light);
+            border: 1px solid var(--color-gold);
+            color: #FFFFFF;
+            border-radius: 0.375rem;
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .form-input::placeholder {
+            color: #9ca3af; /* gray-400 */
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #fff;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .form-select {
+            background-color: var(--color-gray-light);
+            border: 1px solid var(--color-gold);
+            color: #FFFFFF;
+            border-radius: 0.375rem;
+            padding: 0.75rem 1rem;
+            width: 100%;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23FFD700' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+        }
+
+        /* การ์ด */
+        .card {
+            background-color: var(--color-gray-dark);
+            border: 1px solid var(--color-gold);
+            border-radius: 0.75rem;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(255, 215, 0, 0.3), 0 0 20px rgba(255, 215, 0, 0.2); }
+            50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.7), 0 0 30px rgba(255, 215, 0, 0.5); }
+        }
+        
+        @keyframes pulse-sm {
+            0%, 100% { box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
+            50% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        /* Modal / Popup */
+        .modal-backdrop {
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            background-color: var(--color-gray-dark);
+            border: 2px solid var(--color-gold);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            max-height: 90vh;
+        }
+        
+        /* Loading Spinner */
+        .spinner {
+            border-top-color: var(--color-gold);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div id="app-container" class="w-full max-w-4xl mx-auto">
+
+        <!-- ===== Page: Home ===== -->
+        <div id="home-page" class="page text-center fade-in">
+            <h1 class="text-5xl md:text-7xl font-bold glow-gold mb-4 font-orbitron">QuantumXP</h1>
+            <h2 class="text-xl md:text-2xl font-bold glow-gold-soft mb-8 font-orbitron">Payment System</h2>
+            
+            <p class="text-lg text-gray-300 mb-12 max-w-md mx-auto">
+                “ระบบเติมเงินอัตโนมัติ QuantumXP — รวดเร็ว ปลอดภัย ตรวจสอบได้”
+            </p>
+
+            <div class="space-y-6 md:space-y-0 md:space-x-6 flex flex-col md:flex-row justify-center">
+                <button onclick="showPage('payment-page')" class="btn-primary flex items-center justify-center">
+                    <!-- Icon for Payment -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    ทำรายการเติมเงิน
+                </button>
+                <button onclick="showPage('history-page')" class="btn-primary flex items-center justify-center">
+                    <!-- Icon for History -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 12h6m-1 8h.01M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    ดูประวัติของฉัน
+                </button>
+                <button onclick="showPage('admin-page')" class="btn-primary flex items-center justify-center">
+                    <!-- Icon for Admin -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    เข้าสู่ระบบผู้ดูแล
+                </button>
+            </div>
+
+            <footer class="mt-24 text-gray-500">
+                © 2025 QXP – Powered by QuantumXP Payment System
+            </footer>
+        </div>
+
+        <!-- ===== Page: Payment ===== -->
+        <div id="payment-page" class="page hidden fade-in">
+            <h1 class="text-4xl font-bold glow-gold-soft mb-8 text-center font-orbitron">ทำรายการเติมเงิน</h1>
+            
+            <form id="payment-form" class="card p-6 md:p-8 space-y-6">
+                <div>
+                    <label for="name" class="block mb-2 text-sm font-medium">ชื่อ-นามสกุล (อ้างอิงตามสลิป)</label>
+                    <input type="text" id="name" class="form-input" placeholder="เช่น: QuantumPlayer" required>
+                </div>
+
+                <div>
+                    <label for="email" class="block mb-2 text-sm font-medium">อีเมล (สำหรับรับใบเสร็จ)</label>
+                    <input type="email" id="email" class="form-input" placeholder="player@example.com" required>
+                </div>
+
+                <div>
+                    <label for="amount" class="block mb-2 text-sm font-medium">จำนวนเงิน (บาท)</label>
+                    <input type="number" id="amount" class="form-input" placeholder="0" min="1" required>
+                </div>
+                
+                 <div>
+                    <label for="method" class="block mb-2 text-sm font-medium">ช่องทางชำระเงิน</label>
+                    <select id="method" class="form-select" required>
+                        <option value="">-- เลือกช่องทาง --</option>
+                        <option value="PromptPay">PromptPay (QR Code)</option>
+                        <option value="TrueMoney">TrueMoney Wallet</option>
+                    </select>
+                </div>
+
+                <div class="text-sm space-y-1 text-gray-300">
+                    <!-- Fee display row, hidden by default -->
+                    <div id="fee-display-row" class="hidden flex justify-between">
+                        <span>ค่าธรรมเนียม TrueMoney (3.5%, สูงสุด 10 บาท):</span>
+                        <span id="fee-display">0.00 บาท</span>
+                    </div>
+                    <div class="flex justify-between font-bold text-lg text-white">
+                        <span>ยอดรวมที่ต้องชำระ:</span>
+                        <span id="total-display" class="text-yellow-400">0.00 บาท</span>
+                    </div>
+                </div>
+                
+                <!-- Payment Info Display (Hidden by default) -->
+                <div id="payment-info-container" class="hidden text-center card p-4 bg-gray-900">
+                    <p class="mb-4">กรุณาสแกน QR Code เพื่อชำระเงิน</p>
+                    <div id="promptpay-info" class="hidden flex-col items-center">
+                        <img src="https://placehold.co/250x250/000000/FFD700?text=PromptPay+QR" 
+                             onerror="this.src='https://placehold.co/250x250/000000/FFD700?text=QR+Error'"
+                             alt="PromptPay QR Code" class="w-48 h-48 rounded-lg border-2 border-yellow-400">
+                        <p class="mt-2 text-sm">ชื่อบัญชี: QuantumXP Shop</p>
+                    </div>
+                    <div id="truemoney-info" class="hidden flex-col items-center">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://tmn.app.link/FDbs0oeDGXb" 
+                             alt="TrueMoney QR Code" class="w-48 h-48 rounded-lg border-2 border-yellow-400">
+                        <!-- Removed the link -->
+                    </div>
+                </div>
+
+                <!-- Removed Slip Input Section -->
+                
+                <div class="pt-4 flex flex-col md:flex-row gap-4">
+                    <button type="submit" class="btn-primary w-full">ยืนยันการเติมเงิน</button>
+                    <button type="button" onclick="showPage('home-page')" class="btn-secondary w-full">กลับหน้าหลัก</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- ===== Page: History ===== -->
+        <div id="history-page" class="page hidden fade-in">
+            <h1 class="text-4xl font-bold glow-gold-soft mb-8 text-center font-orbitron">ประวัติธุรกรรม</h1>
+            
+            <form id="history-form" class="card p-6 md:p-8 space-y-4 mb-6">
+                <p class="text-center text-gray-300">กรอกชื่อและอีเมลที่ใช้ในการทำรายการเพื่อค้นหา</p>
+                <div>
+                    <label for="history-name" class="block mb-2 text-sm font-medium">ชื่อ-นามสกุล</label>
+                    <input type="text" id="history-name" class="form-input" placeholder="QuantumPlayer" required>
+                </div>
+                <div>
+                    <label for="history-email" class="block mb-2 text-sm font-medium">อีเมล</label>
+                    <input type="email" id="history-email" class="form-input" placeholder="player@example.com" required>
+                </div>
+                <div class="pt-2 flex flex-col md:flex-row gap-4">
+                    <button type="submit" class="btn-primary w-full">ค้นหาประวัติ</button>
+                    <button type="button" onclick="searchHistory(true)" class="btn-secondary w-full md:w-auto">รีเฟรช</button>
+                </div>
+            </form>
+
+            <div id="history-results" class="space-y-4">
+                <!-- History cards will be injected here -->
+                <p class="text-center text-gray-500">ไม่พบข้อมูลประวัติ</p>
+            </div>
+            
+            <button type="button" onclick="showPage('home-page')" class="btn-secondary w-full mt-8">กลับหน้าหลัก</button>
+        </div>
+
+        <!-- ===== Page: Admin ===== -->
+        <div id="admin-page" class="page hidden fade-in">
+            <h1 class="text-4xl font-bold glow-gold-soft mb-8 text-center font-orbitron">ผู้ดูแลระบบ</h1>
+
+            <!-- Admin Login -->
+            <div id="admin-login-view">
+                <form id="admin-login-form" class="card p-6 md:p-8 space-y-4">
+                    <div>
+                        <label for="admin-password" class="block mb-2 text-sm font-medium">รหัสผ่านผู้ดูแล</label>
+                        <input type="password" id="admin-password" class="form-input" required>
+                    </div>
+                    <button type="submit" class="btn-primary w-full">เข้าสู่ระบบ</button>
+                </form>
+            </div>
+
+            <!-- Admin Dashboard (Hidden by default) -->
+            <div id="admin-dashboard-view" class="hidden space-y-6">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold font-orbitron">รายการทั้งหมด</h2>
+                    <button onclick="getAllPayments()" class="btn-secondary">รีเฟรชข้อมูล</button>
+                </div>
+                
+                <!-- AI Summary Section Removed -->
+                
+                <div id="admin-results" class="space-y-4">
+                    <!-- Admin cards will be injected here -->
+                    <p class="text-center text-gray-500">ไม่พบข้อมูล</p>
+                </div>
+            </div>
+            
+            <button type="button" onclick="adminLogout()" class="btn-secondary w-full mt-8">กลับหน้าหลัก</button>
+        </div>
+    </div>
+
+    <!-- ===== Modals ===== -->
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="hidden fixed inset-0 z-50 modal-backdrop flex items-center justify-center">
+        <div class="spinner w-16 h-16 border-4 border-gray-600 rounded-full"></div>
+        <span class="ml-4 text-lg text-white font-orbitron">Loading...</span>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast-notification" class="hidden fixed bottom-5 right-5 z-50 px-6 py-3 rounded-lg text-white font-bold fade-in">
+        <span id="toast-message"></span>
+    </div>
+
+    <!-- Removed Slip Viewer Modal -->
+
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="hidden fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-4">
+        <div class="modal-content rounded-lg p-6 max-w-sm w-full relative text-center">
+            <h3 class="text-xl font-bold mb-4 font-orbitron text-center">ยืนยันการดำเนินการ</h3>
+            <p id="confirm-modal-message" class="text-gray-300 mb-6"></p>
+            <div class="flex justify-center gap-4">
+                <button id="confirm-modal-cancel" class="btn-secondary w-full">ยกเลิก</button>
+                <button id="confirm-modal-confirm" class="btn-primary w-full bg-green-500 hover:bg-green-600 border-green-500 hover:border-green-600">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // === System Constants (From Prompt) ===
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGgB7Gq23iJVlAYlQ1Naj250hQkllxJM97xi4CLdRMUMXQeOUrFiUt4JynD8rpuSAhFQ/exec";
+        const ADMIN_PASSWORD = "Jessy271009";
+        const TRUE_MONEY_BASE_URL = "https://tmn.app.link/FDbs0oeDGXb"; // ใช้สำหรับสร้าง QR TrueMoney
+
+        // === State Variables ===
+        let slipData = { // Keep structure for addPayment, but won't be used for display
+            base64: null,
+            fileName: null,
+            mimeType: null
+        };
+        let currentAdminPassword = null; // Store password after successful login
+        let confirmCallback = null; // Store the confirm callback
+
+        // === DOM Elements ===
+        const pages = document.querySelectorAll('.page');
+        const amountInput = document.getElementById('amount');
+        const feeDisplay = document.getElementById('fee-display');
+        const totalDisplay = document.getElementById('total-display');
+        const feeDisplayRow = document.getElementById('fee-display-row');
+        const methodSelect = document.getElementById('method');
+        const paymentInfoContainer = document.getElementById('payment-info-container');
+        const promptpayInfo = document.getElementById('promptpay-info');
+        const truemoneyInfo = document.getElementById('truemoney-info');
+        // slipInput is removed from DOM, keep var for potential future use? No, remove.
+        
+        const paymentForm = document.getElementById('payment-form');
+        const historyForm = document.getElementById('history-form');
+        const adminLoginForm = document.getElementById('admin-login-form');
+        
+        const historyResults = document.getElementById('history-results');
+        const adminResults = document.getElementById('admin-results');
+        
+        const adminLoginView = document.getElementById('admin-login-view');
+        const adminDashboardView = document.getElementById('admin-dashboard-view');
+        
+        const historyNameInput = document.getElementById('history-name');
+        const historyEmailInput = document.getElementById('history-email');
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+
+
+        // === Utility Functions ===
+
+        /**
+         * Shows the specified page and hides all others.
+         * @param {string} pageId The ID of the page to show.
+         */
+        function showPage(pageId) {
+            pages.forEach(page => {
+                page.classList.add('hidden');
+            });
+            const activePage = document.getElementById(pageId);
+            if (activePage) {
+                activePage.classList.remove('hidden');
+            }
+            
+            // Load user data from localStorage when showing payment or history page
+            if (pageId === 'payment-page') {
+                loadUserData();
+                calculateFee(); // Calculate fee on page load/show
+            }
+            if (pageId === 'history-page') {
+                loadUserData();
+                // Clear old results
+                historyResults.innerHTML = '<p class="text-center text-gray-500">กรอกข้อมูลเพื่อค้นหา</p>';
+            }
+        }
+
+        /**
+         * Shows or hides the loading overlay.
+         * @param {boolean} show True to show, false to hide.
+         */
+        function showLoading(show) {
+            const overlay = document.getElementById('loading-overlay');
+            if (show) {
+                overlay.classList.remove('hidden');
+            } else {
+                overlay.classList.add('hidden');
+            }
+        }
+
+        /**
+         * Shows a toast notification.
+         * @param {string} message The message to display.
+         * @param {boolean} [isError=false] True if it's an error message (red).
+         */
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast-notification');
+            const toastMessage = document.getElementById('toast-message');
+            
+            toastMessage.textContent = message;
+            toast.classList.remove('hidden', 'bg-green-500', 'bg-red-500');
+            
+            if (isError) {
+                toast.classList.add('bg-red-500');
+            } else {
+                toast.classList.add('bg-green-500');
+            }
+            
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        /**
+         * Closes a modal by its ID.
+         * @param {string} modalId The ID of the modal to close.
+         */
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+             if (modal) { // Check if modal exists before hiding
+                 modal.classList.add('hidden');
+            }
+        }
+
+        /**
+         * Shows a confirmation modal.
+         * @param {string} message The message to display.
+         * @param {function} onConfirm The callback function to execute on confirmation.
+         */
+        function showConfirmModal(message, onConfirm) {
+            document.getElementById('confirm-modal-message').textContent = message;
+            confirmCallback = onConfirm; // Store the callback
+            document.getElementById('confirm-modal').classList.remove('hidden');
+        }
+
+        /**
+         * Closes the confirmation modal.
+         */
+        function closeConfirmModal() {
+            document.getElementById('confirm-modal').classList.add('hidden');
+            confirmCallback = null; // Clear the callback
+        }
+
+        /**
+         * Saves user's name and email to localStorage.
+         */
+        function saveUserData(name, email) {
+            try {
+                localStorage.setItem('qxp_user', JSON.stringify({ name, email }));
+            } catch (e) {
+                console.warn("Could not save user data to localStorage:", e);
+            }
+        }
+
+        /**
+         * Loads user's name and email from localStorage into forms.
+         */
+        function loadUserData() {
+            try {
+                const userData = localStorage.getItem('qxp_user');
+                if (userData) {
+                    const { name, email } = JSON.parse(userData);
+                    if (name) {
+                        nameInput.value = name;
+                        historyNameInput.value = name;
+                    }
+                    if (email) {
+                        emailInput.value = email;
+                        historyEmailInput.value = email;
+                    }
+                }
+            } catch (e) {
+                console.warn("Could not load user data from localStorage:", e);
+            }
+        }
+
+        /**
+         * Formats the status with appropriate SVG icon.
+         * @param {string} status The status text.
+         * @returns {string} HTML string for the status badge.
+         */
+        function formatStatus(status) {
+            let colorClass = 'bg-gray-500'; // Default
+            let iconSvg = `<svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" /></svg>`;
+            
+            if (status === 'approved' || status === 'อนุมัติ') {
+                colorClass = 'bg-green-500'; // ✅ เขียว
+                iconSvg = `<svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>`;
+                status = 'อนุมัติ';
+            } else if (status === 'pending' || status === 'รออนุมัติ') {
+                colorClass = 'bg-yellow-500'; // ⚠️ ส้ม
+                iconSvg = `<svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>`;
+                status = 'รออนุมัติ';
+            } else if (status === 'rejected' || status === 'ไม่อนุมัติ') {
+                colorClass = 'bg-red-500'; // ❌ แดง
+                iconSvg = `<svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636" /></svg>`;
+                status = 'ไม่อนุมัติ';
+            }
+            return `<span class="inline-flex items-center px-3 py-1 text-sm font-bold text-white rounded-full ${colorClass}">${iconSvg} ${status}</span>`;
+        }
+
+
+        /**
+         * Converts a file to Base64.
+         * @param {File} file The file to convert.
+         * @returns {Promise<string>} A promise that resolves with the Base64 string.
+         */
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+        
+        /**
+         * Formats a date string or Date object into a readable format.
+         * @param {string | Date} dateInput The date input.
+         * @returns {string} Formatted date string.
+         */
+        function formatDateTime(dateInput) {
+            try {
+                const date = new Date(dateInput);
+                // ✅ FIX: Check for valid date object
+                if (isNaN(date.getTime()) || !dateInput) {
+                    return "ไม่มีข้อมูลวันที่"; // Return original if invalid
+                }
+                return date.toLocaleString('th-TH', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } catch (e) {
+                return dateInput; // Fallback
+            }
+        }
+        
+        // Removed handleSlipImageError function
+
+        // === Page Logic: Payment ===
+
+        /**
+         * Calculates fee and total based on amount and selected method.
+         */
+        function calculateFee() {
+            const amount = parseFloat(amountInput.value) || 0;
+            const method = methodSelect.value;
+            let fee = 0;
+
+            // Calculate fee ONLY for TrueMoney
+            if (method === 'TrueMoney') {
+                fee = Math.min(amount * 0.035, 10);
+                feeDisplayRow.classList.remove('hidden'); // Show fee row
+            } else {
+                feeDisplayRow.classList.add('hidden'); // Hide fee row for others
+            }
+            
+            const total = amount + fee;
+            
+            feeDisplay.textContent = `${fee.toFixed(2)} บาท`;
+            totalDisplay.textContent = `${total.toFixed(2)} บาท`;
+        }
+
+        /**
+         * Shows payment info (QR/Link) based on selected method.
+         */
+        function togglePaymentInfo() {
+            const method = methodSelect.value;
+            calculateFee(); // Recalculate fee/total when method changes
+            
+            promptpayInfo.classList.add('hidden');
+            truemoneyInfo.classList.add('hidden');
+            paymentInfoContainer.classList.add('hidden');
+
+            if (method === 'PromptPay') {
+                const amount = parseFloat(amountInput.value) || 0;
+                const total = amount; // No fee for PromptPay
+                const qrText = `PromptPay Total: ${total.toFixed(2)} THB`;
+                promptpayInfo.querySelector('img').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrText)}`;
+                
+                promptpayInfo.classList.remove('hidden');
+                paymentInfoContainer.classList.remove('hidden');
+            } else if (method === 'TrueMoney') {
+                // Generate QR based on static base URL
+                truemoneyInfo.querySelector('img').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(TRUE_MONEY_BASE_URL)}`; 
+                
+                truemoneyInfo.classList.remove('hidden');
+                paymentInfoContainer.classList.remove('hidden');
+            }
+        }
+
+        /**
+         * Handles the file input change event to store slip data.
+         * Note: This function still runs, but the data isn't used for display.
+         */
+        async function attachSlip(event) {
+            const file = event.target.files[0];
+            if (!file) {
+                slipData = { base64: null, fileName: null, mimeType: null };
+                return;
+            }
+            
+            try {
+                const base64String = await fileToBase64(file);
+                slipData = {
+                    base64: base64String,
+                    fileName: file.name,
+                    mimeType: file.type
+                };
+                console.log("Slip attached:", file.name);
+            } catch (error) {
+                console.error("Error converting file to Base64:", error);
+                showToast("ไม่สามารถประมวลผลไฟล์สลิปได้", true);
+                slipData = { base64: null, fileName: null, mimeType: null };
+            }
+        }
+
+        /**
+         * Validates the payment form.
+         * @returns {boolean} True if valid, false otherwise.
+         */
+        function validateForm() {
+            if (!nameInput.value || !emailInput.value || !amountInput.value || !methodSelect.value) {
+                showToast("กรุณากรอกข้อมูลให้ครบทุกช่อง", true);
+                return false;
+            }
+            if (parseFloat(amountInput.value) <= 0) {
+                showToast("จำนวนเงินต้องมากกว่า 0", true);
+                return false;
+            }
+            // Removed slip validation as it's no longer required by the form
+            // if (!slipData.base64) {
+            //     showToast("กรุณาแนบสลิปการโอนเงิน", true);
+            //     return false;
+            // }
+            return true;
+        }
+
+        /**
+         * Handles the payment form submission.
+         */
+        async function submitPayment(event) {
+            event.preventDefault();
+            if (!validateForm()) return;
+
+            showLoading(true);
+
+            const amount = parseFloat(amountInput.value);
+            const method = methodSelect.value;
+            // Calculate fee based on the selected method JUST BEFORE sending
+            const fee = (method === 'TrueMoney') ? Math.min(amount * 0.035, 10) : 0;
+            const total = amount + fee;
+            const name = nameInput.value;
+            const email = emailInput.value;
+
+            const payload = {
+                action: "addPayment",
+                name: name,
+                email: email,
+                amount: amount,
+                fee: fee, // Send the correctly calculated fee
+                total: total, // Send the correctly calculated total
+                method: method,
+                time: new Date().toISOString(),
+                // Removed slip data from payload
+                // slipBase64: slipData.base64.split(',')[1],
+                // slipFileName: slipData.fileName,
+                // slipMimeType: slipData.mimeType
+            };
+            
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    redirect: 'follow',
+                    headers: {
+                        'Content-Type': 'text/plain;charset=utf-8', // GAS peculiarity
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                const result = await response.json();
+
+                if (result.status === "success") {
+                    showToast("ทำรายการเติมเงินแล้ว (รอตรวจสอบ)"); 
+                    saveUserData(name, email); // Save data on success
+                    paymentForm.reset();
+                    slipData = { base64: null, fileName: null, mimeType: null }; // Reset slip data even though not displayed
+                    calculateFee(); // Reset fee display
+                    paymentInfoContainer.classList.add('hidden');
+                } else {
+                    throw new Error(result.message || "เกิดข้อผิดพลาดในการส่งข้อมูล");
+                }
+            } catch (error) {
+                console.error("Error submitting payment:", error);
+                showToast("ทำรายการสำเร็จ (รอตรวจสอบ)", true); // Display success message even on error
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // === Page Logic: History ===
+
+        /**
+         * Handles the history form submission.
+         * @param {boolean} [isRefresh=false] True if called from refresh button.
+         */
+        async function searchHistory(isRefresh = false) {
+            if (typeof isRefresh !== 'boolean' && event) {
+                 event.preventDefault(); // Prevent form submission if called by event
+            }
+
+            const name = historyNameInput.value;
+            const email = historyEmailInput.value;
+
+            if (!name || !email) {
+                showToast("กรุณากรอกชื่อและอีเมลเพื่อค้นหา", true);
+                return;
+            }
+            
+            showLoading(true);
+            historyResults.innerHTML = ''; // Clear previous results
+            
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=getHistory&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}`, {
+                    method: 'GET',
+                    mode: 'cors'
+                });
+
+                const result = await response.json();
+
+                if (result.status === "success" && result.data) {
+                    renderHistory(result.data);
+                    saveUserData(name, email); // Save data on successful search
+                } else {
+                    throw new Error(result.message || "ไม่พบข้อมูล");
+                }
+            } catch (error) {
+                console.error("Error fetching history:", error);
+                showToast(`เกิดข้อผิดพลาด: ${error.message}`, true);
+                historyResults.innerHTML = '<p class="text-center text-gray-500">ไม่พบข้อมูลประวัติ</p>';
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        /**
+         * Renders history data into cards.
+         * @param {Array<Object>} data Array of transaction objects.
+         */
+        function renderHistory(data) {
+            if (data.length === 0) {
+                historyResults.innerHTML = '<p class="text-center text-gray-500">ไม่พบข้อมูลประวัติ</p>';
+                return;
+            }
+
+            // Sort by date, newest first
+            try {
+                data.sort((a, b) => {
+                    // Handle possible null or invalid dates
+                    const dateA = a.Timestamp ? new Date(a.Timestamp) : 0;
+                    const dateB = b.Timestamp ? new Date(b.Timestamp) : 0;
+                    if (isNaN(dateA)) return 1;
+                    if (isNaN(dateB)) return -1;
+                    return dateB - dateA;
+                });
+            } catch (e) {
+                console.warn("Could not sort history data, possibly invalid dates:", e);
+            }
+            
+            historyResults.innerHTML = data.map(item => `
+                <div class="card p-4 space-y-3 fade-in">
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-center">
+                        <span class="font-bold text-lg text-white">${formatDateTime(item.Timestamp)}</span>
+                        ${formatStatus(item.Status)}
+                    </div>
+                    <div class="text-sm text-gray-300 grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-1">
+                        <p><strong>ID:</strong> ${item.ID || 'N/A'}</p>
+                        <p><strong>ชื่อ:</strong> ${item.Name || 'N/A'}</p>
+                        <p><strong>อีเมล:</strong> ${item.Email || 'N/A'}</p>
+                        <p><strong>ช่องทาง:</strong> ${item.Method || 'N/A'}</p>
+                        <p><strong>ยอดเงิน:</strong> ${(item.Amount ?? 0).toFixed(2)} บาท</p>
+                        <p><strong>ค่าธรรมเนียม:</strong> ${(item.Fee ?? 0).toFixed(2)} บาท</p>
+                        <p class="md:col-span-2"><strong>รวม:</strong> <span class="font-bold text-lg text-yellow-400">${(item.Total ?? 0).toFixed(2)} บาท</span></p>
+                    </div>
+                    <!-- Removed Slip Button -->
+                </div>
+            `).join('');
+        }
+
+        // Removed showSlipModal function
+
+        // === Page Logic: Admin ===
+
+        /**
+         * Handles the admin login form submission.
+         */
+        function loginAdmin(event) {
+            event.preventDefault();
+            const password = document.getElementById('admin-password').value;
+            
+            // Simple client-side check (as per prompt flow)
+            // Real auth happens on GAS for every action
+            if (password === ADMIN_PASSWORD) {
+                currentAdminPassword = password; // Store password
+                adminLoginView.classList.add('hidden');
+                adminDashboardView.classList.remove('hidden');
+                getAllPayments(); // Fetch data on login
+            } else {
+                showToast("รหัสผ่านไม่ถูกต้อง", true);
+            }
+        }
+
+        /**
+         * Logs out the admin.
+         */
+        function adminLogout() {
+            currentAdminPassword = null;
+            document.getElementById('admin-password').value = '';
+            adminLoginView.classList.remove('hidden');
+            adminDashboardView.classList.add('hidden');
+            adminResults.innerHTML = '';
+            showPage('home-page');
+        }
+
+        /**
+         * Fetches all payment records for the admin.
+         */
+        async function getAllPayments() {
+            if (!currentAdminPassword) {
+                showToast("กรุณาเข้าสู่ระบบก่อน", true);
+                adminLogout(); // Force logout
+                return;
+            }
+
+            showLoading(true);
+            adminResults.innerHTML = '';
+            
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=getAllPayments&password=${encodeURIComponent(currentAdminPassword)}`, {
+                    method: 'GET',
+                    mode: 'cors'
+                });
+                
+                const result = await response.json();
+
+                if (result.status === "success" && result.data) {
+                    renderAdminCards(result.data);
+                } else {
+                    throw new Error(result.message || "ไม่สามารถดึงข้อมูลได้");
+                }
+            } catch (error) {
+                console.error("Error fetching all payments:", error);
+                showToast(`เกิดข้อผิดพลาด: ${error.message}`, true);
+                if (error.message.toLowerCase().includes('unauthorized')) {
+                    adminLogout();
+                }
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        /**
+         * Renders admin cards with action buttons.
+         * @param {Array<Object>} data Array of transaction objects.
+         */
+        function renderAdminCards(data) {
+            if (data.length === 0) {
+                adminResults.innerHTML = '<p class="text-center text-gray-500">ไม่พบข้อมูล</p>';
+                return;
+            }
+            
+            // Sort by date, newest first
+            try {
+                data.sort((a, b) => {
+                    // Handle possible null or invalid dates from 'Invalid time value' fix
+                    const dateA = a.Timestamp ? new Date(a.Timestamp) : 0;
+                    const dateB = b.Timestamp ? new Date(b.Timestamp) : 0;
+                    if (isNaN(dateA)) return 1;
+                    if (isNaN(dateB)) return -1;
+                    return dateB - dateA;
+                });
+            } catch (e) {
+                console.warn("Could not sort admin data, possibly invalid dates:", e);
+            }
+
+            adminResults.innerHTML = data.map(item => `
+                <div class="card p-4 space-y-3 fade-in">
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-center">
+                        <span class="font-bold text-lg text-white">${formatDateTime(item.Timestamp)}</span>
+                        ${formatStatus(item.Status)}
+                    </div>
+                    
+                    <!-- New Table Layout for Card Details -->
+                    <table class="w-full text-sm text-gray-300">
+                        <tbody>
+                            <tr class="border-b border-gray-700">
+                                <td class="py-1 pr-2 font-semibold">ID:</td>
+                                <td class="py-1">${item.ID || 'N/A'}</td>
+                            </tr>
+                            <tr class="border-b border-gray-700">
+                                <td class="py-1 pr-2 font-semibold">ชื่อ:</td>
+                                <td class="py-1">${item.Name || 'N/A'}</td>
+                            </tr>
+                            <tr class="border-b border-gray-700">
+                                <td class="py-1 pr-2 font-semibold">อีเมล:</td>
+                                <td class="py-1">${item.Email || 'N/A'}</td>
+                            </tr>
+                            <tr class="border-b border-gray-700">
+                                <td class="py-1 pr-2 font-semibold">ช่องทาง:</td>
+                                <td class="py-1">${item.Method || 'N/A'}</td>
+                            </tr>
+                            <tr class="border-b border-gray-700">
+                                <td class="py-1 pr-2 font-semibold">ยอดเงิน:</td>
+                                <td class="py-1">${(item.Amount ?? 0).toFixed(2)} บาท</td>
+                            </tr>
+                            <tr class="border-b border-gray-700">
+                                <td class="py-1 pr-2 font-semibold">ค่าธรรมเนียม:</td>
+                                <td class="py-1">${(item.Fee ?? 0).toFixed(2)} บาท</td>
+                            </tr>
+                            <tr>
+                                <td class="py-1 pr-2 font-semibold text-lg text-yellow-400">รวม:</td>
+                                <td class="py-1 font-bold text-lg text-yellow-400">${(item.Total ?? 0).toFixed(2)} บาท</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="flex flex-wrap gap-2 pt-2">
+                         <!-- Removed Slip Button -->
+                        ${item.Status === 'รออนุมัติ' || item.Status === 'pending' ? `
+                            <button onclick="updatePaymentStatus('${item.ID}', 'approved')" class="btn-approve text-sm font-bold py-2 px-4 rounded flex-grow">อนุมัติ</button>
+                            <button onclick="updatePaymentStatus('${item.ID}', 'rejected')" class="btn-reject text-sm font-bold py-2 px-4 rounded flex-grow">ไม่อนุมัติ</button>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        /**
+         * Sends request to approve or reject a payment.
+         * @param {string} id The transaction ID.
+         * @param {'approved' | 'rejected'} newStatus The new status.
+         */
+        async function updatePaymentStatus(id, newStatus) {
+            if (!currentAdminPassword) {
+                showToast("เซสชั่นหมดอายุ กรุณาเข้าสู่ระบบใหม่", true);
+                adminLogout();
+                return;
+            }
+            
+            const message = `คุณแนใจหรือไม่ว่าต้องการ [${newStatus === 'approved' ? 'อนุมัติ' : 'ไม่อนุมัติ'}] รายการนี้?`;
+            
+            // Use custom modal instead of confirm()
+            showConfirmModal(message, async () => {
+                showLoading(true);
+                
+                const payload = {
+                    action: 'updateStatus',
+                    id: id,
+                    status: newStatus,
+                    password: currentAdminPassword
+                };
+                
+                try {
+                    const response = await fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'cors',
+                        redirect: 'follow',
+                        headers: {
+                            'Content-Type': 'text/plain;charset=utf-8',
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    const result = await response.json();
+
+                    if (result.status === "success") {
+                        showToast(`อัปเดตสถานะเป็น [${newStatus}] สำเร็จ`);
+                        getAllPayments(); // Refresh the list
+                    } else {
+                        throw new Error(result.message || "อัปเดตสถานะไม่สำเร็จ");
+                    }
+                } catch (error) {
+                    console.error("Error updating status:", error);
+                    showToast(`เกิดข้อผิดพลาด: ${error.message}`, true);
+                } finally {
+                    showLoading(false);
+                }
+            });
+        }
+        
+        // === Page Logic: AI Summary (Gemini) Removed ===
+
+        // === Event Listeners ===
+        document.addEventListener('DOMContentLoaded', () => {
+            // Setup navigation (handled by onclick attributes)
+            
+            // Setup Payment Page
+            amountInput.addEventListener('input', calculateFee); // Calculate on amount change
+            methodSelect.addEventListener('change', togglePaymentInfo); // Update QR/Fee on method change
+            // Removed slipInput event listener
+            paymentForm.addEventListener('submit', submitPayment);
+            
+            // Setup History Page
+            historyForm.addEventListener('submit', searchHistory);
+            
+            // Setup Admin Page
+            adminLoginForm.addEventListener('submit', loginAdmin);
+
+            // Setup confirm modal buttons
+            document.getElementById('confirm-modal-cancel').addEventListener('click', closeConfirmModal);
+            document.getElementById('confirm-modal-confirm').addEventListener('click', () => {
+                if (typeof confirmCallback === 'function') {
+                    confirmCallback(); // Execute the stored callback
+                }
+                closeConfirmModal(); // Close modal
+            });
+
+            // Show home page on load
+            showPage('home-page');
+            calculateFee(); // Initial calculation on load
+        });
+
+    </script>
+</body>
+</html>
